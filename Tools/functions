@@ -1,0 +1,46 @@
+
+
+static inline unsigned char hf_hex2bin(char c, bool &err)
+{
+    if (c >= '0' && c <= '9') {
+        return c - '0';
+    }
+    else if (c >= 'a' && c <= 'f') {
+        return c - 'a' + 0xA;
+    }
+    else if (c >= 'A' && c <= 'F') {
+        return c - 'A' + 0xA;
+    }
+
+    err = true;
+    return 0;
+}
+//hex to bytearray
+bool fromHex(const char* in, unsigned int len, unsigned char* out)
+{
+    bool error = false;
+    for (unsigned int i = 0; i < len; i += 2) {
+        out[i / 2] = (hf_hex2bin(in[i], error) << 4) | hf_hex2bin(in[i + 1], error);
+
+        if (error) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// bin to hex
+std::string bin2hex(const std::string& input)
+{
+    std::string res;
+    const char hex[] = "0123456789ABCDEF";
+    for(auto sc : input)
+    {
+        unsigned char c = static_cast<unsigned char>(sc);
+        res += hex[c >> 4];
+        res += hex[c & 0xf];
+    }
+
+    return res;
+}
+
