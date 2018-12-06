@@ -44,3 +44,19 @@ std::string bin2hex(const std::string& input)
     return res;
 }
 
+// bin to hex
+static inline char hf_bin2hex(unsigned char c)
+{
+    if (c <= 0x9) {
+        return '0' + c;
+    }
+
+    return 'a' - 0xA + c;
+}
+void toHex(const unsigned char* in, unsigned int len, char* out)
+{
+    for (unsigned int i = 0; i < len; i++) {
+        out[i * 2] = hf_bin2hex((in[i] & 0xF0) >> 4);
+        out[i * 2 + 1] = hf_bin2hex(in[i] & 0x0F);
+    }
+}
